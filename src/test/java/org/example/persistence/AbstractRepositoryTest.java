@@ -1,5 +1,6 @@
 package org.example.persistence;
 
+import org.example.model.Status;
 import org.example.model.Task;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -40,7 +41,7 @@ public class AbstractRepositoryTest {
     @Test
     public void testSaveShouldRollbackAndThrowException() {
         doThrow(new RuntimeException("Simulated DB error")).when(mockSession).persist(any());
-        Task testTask = new Task("Test", LocalDate.now(), "Info");
+        Task testTask = new Task("Test", LocalDate.now(), "Info", Status.IN_PROGRESS);
         assertThrows(RepositoryException.class, () -> testRepository.save(testTask));
         verify(mockTransaction, times(1)).rollback();
     }
@@ -48,7 +49,7 @@ public class AbstractRepositoryTest {
     @Test
     public void testUpdateShouldRollbackAndThrowException() {
         when(mockSession.merge(any())).thenThrow(new RuntimeException("Simulated DB error"));
-        assertThrows(RepositoryException.class, () -> testRepository.update(new Task("Test", LocalDate.now(), "Info")));
+        assertThrows(RepositoryException.class, () -> testRepository.update(new Task("Test", LocalDate.now(), "Info", Status.IN_PROGRESS)));
         verify(mockTransaction).rollback();
     }
 

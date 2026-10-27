@@ -1,5 +1,6 @@
 package org.example.persistence;
 
+import org.example.model.Status;
 import org.example.model.Task;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,11 +29,11 @@ public class RepositoryTaskTest {
     @Test
     public void test() {
         //testSave
-        repoTask.save(new Task("Laborator", LocalDate.of(2026, 12, 2), "Rezolva lab fara ai"));
-        repoTask.save(new Task("Laborator", LocalDate.of(2026, 12, 2), "Rezolva lab fara ai"));
-        repoTask.save(new Task("Laborator1", LocalDate.of(2026, 12, 3), "Rezolva lab fara ai"));
-        repoTask.save(new Task("Laborator2", LocalDate.of(2026, 12, 4), "Rezolva lab fara ai"));
-        Task taskToFind = new Task("Laborator3", LocalDate.of(2026, 12, 5), "Rezolva lab fara ai");
+        repoTask.save(new Task("Laborator", LocalDate.of(2026, 12, 2), "Rezolva lab fara ai", Status.IN_PROGRESS));
+        repoTask.save(new Task("Laborator", LocalDate.of(2026, 12, 2), "Rezolva lab fara ai", Status.IN_PROGRESS));
+        repoTask.save(new Task("Laborator1", LocalDate.of(2026, 12, 3), "Rezolva lab fara ai", Status.IN_PROGRESS));
+        repoTask.save(new Task("Laborator2", LocalDate.of(2026, 12, 4), "Rezolva lab fara ai", Status.IN_PROGRESS));
+        Task taskToFind = new Task("Laborator3", LocalDate.of(2026, 12, 5), "Rezolva lab fara ai", Status.IN_PROGRESS);
         repoTask.save(taskToFind);
 
         //testFindById
@@ -40,7 +41,7 @@ public class RepositoryTaskTest {
         assertEquals(taskToFind.getId(), taskFound.getId());
 
         //testUpdate
-        Task taskToFindUpdated = new Task("Laborator3", LocalDate.of(2026, 12, 5), "Rezolva lab fara ai-uri");
+        Task taskToFindUpdated = new Task("Laborator3", LocalDate.of(2026, 12, 5), "Rezolva lab fara ai-uri", Status.IN_PROGRESS);
         taskToFindUpdated.setId(taskToFind.getId());
         repoTask.update(taskToFind);
         assertEquals("Rezolva lab fara ai-uri", taskToFindUpdated.getDescription());

@@ -1,6 +1,7 @@
 package org.example.persistence;
 
 import org.example.model.Objective;
+import org.example.model.Status;
 import org.example.model.Task;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,11 +29,11 @@ public class RepositoryObjectiveTest {
     @Test
     public void test() {
         //testSave
-        repoObjective.save(new Objective("Laborator", LocalDate.of(2026, 12, 2), "Rezolva lab fara ai"));
-        repoObjective.save(new Objective("Laborator", LocalDate.of(2026, 12, 2), "Rezolva lab fara ai"));
-        repoObjective.save(new Objective("Laborator1", LocalDate.of(2026, 12, 3), "Rezolva lab fara ai"));
-        repoObjective.save(new Objective("Laborator2", LocalDate.of(2026, 12, 4), "Rezolva lab fara ai"));
-        Objective ObjectiveToFind = new Objective("Laborator3", LocalDate.of(2026, 12, 5), "Rezolva lab fara ai");
+        repoObjective.save(new Objective("Laborator", LocalDate.of(2026, 12, 2), "Rezolva lab fara ai", Status.IN_PROGRESS));
+        repoObjective.save(new Objective("Laborator", LocalDate.of(2026, 12, 2), "Rezolva lab fara ai", Status.IN_PROGRESS));
+        repoObjective.save(new Objective("Laborator1", LocalDate.of(2026, 12, 3), "Rezolva lab fara ai", Status.IN_PROGRESS));
+        repoObjective.save(new Objective("Laborator2", LocalDate.of(2026, 12, 4), "Rezolva lab fara ai", Status.IN_PROGRESS));
+        Objective ObjectiveToFind = new Objective("Laborator3", LocalDate.of(2026, 12, 5), "Rezolva lab fara ai", Status.IN_PROGRESS);
         repoObjective.save(ObjectiveToFind);
 
         //testFindById
@@ -40,7 +41,7 @@ public class RepositoryObjectiveTest {
         assertEquals(ObjectiveToFind.getId(), ObjectiveFound.getId());
 
         //testUpdate
-        Objective ObjectiveToFindUpdated = new Objective("Laborator3", LocalDate.of(2026, 12, 5), "Rezolva lab fara ai-uri");
+        Objective ObjectiveToFindUpdated = new Objective("Laborator3", LocalDate.of(2026, 12, 5), "Rezolva lab fara ai-uri", Status.IN_PROGRESS);
         ObjectiveToFindUpdated.setId(ObjectiveToFind.getId());
         repoObjective.update(ObjectiveToFind);
         assertEquals("Rezolva lab fara ai-uri", ObjectiveToFindUpdated.getDescription());
