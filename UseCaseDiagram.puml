@@ -1,0 +1,29 @@
+@startuml
+left to right direction
+
+actor User as U
+actor System as Sys <<System>>
+
+rectangle "Task Scheduler System" {
+    usecase "CRUD task" as crud_task
+    usecase "CRUD objective" as crud_obj
+    usecase "See today/week/month/season tasks" as view_task
+    usecase "See week/month/season/year objecives" as view_obj
+    usecase "Mark as Done task" as done_task
+    usecase "Mark as Done objective" as done_obj
+
+    usecase "Trigger Due Date Check" as trigger_check
+    usecase "Notify User (Due today / in 6 hours)" as notify_user
+}
+
+U --> crud_task
+U --> crud_obj
+U --> view_task
+U --> view_obj
+U --> done_task
+U --> done_obj
+
+Sys --> trigger_check
+trigger_check ..> notify_user : <<includes>>
+notify_user --> U : "Sends alert"
+@enduml

@@ -1,0 +1,95 @@
+@startuml
+package Model {
+    abstract class Entity<ID> {
+        # ID id
+    }
+
+    abstract class SchedulableEntity extends Entity<Long> {
+        # String title
+        # LocalDate dueDate
+        # String description
+    }
+
+    class Task extends SchedulableEntity {}
+
+    class Objective extends SchedulableEntity {}
+
+    enum Status {
+        IN_PROGRESS
+        FINISHED
+    }
+}
+
+package Repository {
+    interface IRepository<ID, T> {
+        + save(entity: T): T
+        + findById(id: ID): Optional<T>
+        + findByDate(date: LocalDateTime): List<T>
+        + findByName(name: String): List<T>
+        + findByTimeInterval(LocalDateTime from, LocalDateTime to)
+        + update(entity: T): T
+        + delete(id: ID): void
+        + findAll(): List<T>
+    }
+
+    abstract class AbstractRepository<ID, T> implements IRepository
+
+    interface IRepositoryTask extends IRepository
+    interface IRepositoryObjective extends IRepository
+
+    class RepositoryTask extends AbstractRepository implements IRepositoryTask
+    class RepositoryObjective extends AbstractRepository implements IRepositoryObjective
+
+}
+
+package Services {
+    enum ItemType {
+            TASK
+            OBJECTIVE
+        }
+
+        class SchedulerService implements "IObservable<EntityChangeEvent>" {
+            - RepositoryTask taskRepo
+            - RepositoryObjective objectiveRepo
+
+            + add(ItemType type, String title, LocalDate dueDate, String description): SchedulableEntity
+            + update(SchedulableEntity entity): SchedulableEntity
+            + remove(ItemType type, Long id): void
+            + findById(ItemType type, Long id): Optional<SchedulableEntity>
+            + findAll(ItemType type): List<SchedulableEntity>
+            + findByName(ItemType type, String title): List<SchedulableEntity>
+            + findByDate(ItemType type, LocalDate date): List<SchedulableEntity>
+            + findByTimeInterval(ItemType type, LocalDate from, LocalDate to): List<SchedulableEntity>
+        }
+}
+
+package Utils {
+    package Events {
+        interface Event
+
+        enum EntityChangeEventType {
+            ADD
+            DELETE
+            UPDATE
+        }
+
+        class EntityChangeEvent<E> implements Event {
+            - EntityChangeEventType type
+            - E data
+            - E oldData
+        }
+    }
+
+    package Observer {
+        interface Observer<E extends Event> {
+            update (E event): void
+        }
+
+        interface Observable<E extends Event> {
+            addObserver(Observer<E> observer): void
+            removeObserver(Observer<E> observer): void
+            notifyObserver(E t): void
+        }
+    }
+}
+@enduml
